@@ -8,7 +8,12 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // --- Middlewares ---
-app.use(cors());
+const corsOptions = {
+  origin: 'https://inventario-fullstack.vercel.app', // La URL de tu frontend en Vercel
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // --- Conexión a MongoDB ---
