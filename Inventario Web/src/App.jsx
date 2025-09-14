@@ -12,7 +12,7 @@ function App() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/products');
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products`);
         const data = await response.json();
         setProducts(data); // Actualizamos el estado con los datos del backend
       } catch (error) {
@@ -30,7 +30,7 @@ function App() {
  // 3. NUEVA FUNCIÓN para manejar la eliminación
   const handleDeleteProduct = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${id}`, {
         method: 'DELETE',
       });
 
@@ -52,7 +52,7 @@ function App() {
 
   const handleUpdateProduct = async (id, updatedData) => {
   try {
-    const response = await fetch(`http://localhost:5000/api/products/${id}`, {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${id}`, {
       method: 'PUT', // Usamos el método PUT para actualizar
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updatedData),
