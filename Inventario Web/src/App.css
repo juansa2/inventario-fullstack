@@ -1,0 +1,138 @@
+/* src/App.css */
+
+/* Estilos generales y de la fuente */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f4f7f6;
+  color: #333;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Contenedor principal para centrar la aplicación */
+.app-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  padding: 20px 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+  color: #2c3e50;
+  text-align: center;
+}
+
+/* Estilos del formulario */
+.form-container {
+  margin-bottom: 40px;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.form-container form div {
+  margin-bottom: 15px;
+}
+
+.form-container label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-container input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+}
+
+/* Estilos de los botones */
+button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+button[type="submit"] {
+  width: 100%;
+  background-color: #28a745;
+  color: white;
+}
+
+button[type="submit"]:hover {
+  background-color: #218838;
+}
+
+/* Estilos de la lista de productos */
+.product-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.product-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 10px;
+  background-color: #fafafa;
+  border-radius: 5px;
+}
+
+.product-details {
+  flex-grow: 1;
+}
+
+.product-actions button {
+  margin-left: 10px;
+}
+
+.edit-button {
+  background-color: #ffc107;
+  color: #333;
+}
+.edit-button:hover {
+  background-color: #e0a800;
+}
+
+.delete-button {
+  background-color: #dc3545;
+  color: white;
+}
+.delete-button:hover {
+  background-color: #c82333;
+}
+
+.product-details {
+  display: flex; /* Hacemos que los detalles se organicen horizontalmente */
+  align-items: center;
+  flex-grow: 1;
+  gap: 1.5rem; /* Espacio entre los elementos */
+}
+
+.product-name {
+  flex-grow: 1; /* El nombre tomará el espacio sobrante */
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.product-quantity {
+  width: 80px; /* Ancho fijo para la columna de cantidad */
+  text-align: right;
+  color: #34495e;
+}
+
+.product-price {
+  width: 100px; /* Ancho fijo para la columna de precio */
+  text-align: right;
+  font-weight: 500;
+  color: #27ae60;
+}
