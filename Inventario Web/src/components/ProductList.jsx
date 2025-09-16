@@ -19,7 +19,7 @@ return (
           {products.map(product => (
             <tr key={product._id}>
               <td data-label="Nombre">{product.name}</td>
-              <td data-label="Cantidad">{product.quantity}</td>
+              <td data-label="Cantidad" className="cell-center">{product.quantity}</td>
               <td data-label="Precio">
                 {product.price.toLocaleString('es-CO', {
                   style: 'currency',
