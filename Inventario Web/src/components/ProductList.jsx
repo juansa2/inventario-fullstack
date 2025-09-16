@@ -3,29 +3,38 @@ import { useState } from 'react'; // ¡Añadimos useState!
 
 function ProductList({ products, onDeleteProduct, onEditClick }) {
   // Por ahora, solo devolveremos un título.
-  return (
-    <div className="product-list">
+return (
+    <div className="product-list-container">
       <h2>Lista de Productos</h2>
-      {/* Aquí irá nuestra tabla o lista de productos más adelante */}
-      <ul>
-        {products.map((product) => (
-            <li key={product._id} className="product-item">
-            <div className="product-details">
-                <span className="product-name">{product.name}</span>
-                <span className="product-quantity">Cant: {product.quantity}</span>
-                <span className="product-price">${product.price}</span>
-            </div>
-            <div className="product-actions">
-                <button onClick={() => onEditClick(product)} className="edit-button">
-                Editar
-                </button>
-                <button onClick={() => onDeleteProduct(product._id)} className="delete-button">
-                Eliminar
-                </button>
-            </div>
-            </li>
-        ))}
-      </ul>
+      <table className="product-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {products.map(product => (
+            <tr key={product._id}>
+              <td data-label="Nombre">{product.name}</td>
+              <td data-label="Cantidad">{product.quantity}</td>
+              <td data-label="Precio">${product.price}</td>
+              <td data-label="Acciones">
+                <div className="product-actions">
+                  <button onClick={() => onEditClick(product)} className="edit-button">
+                    Editar
+                  </button>
+                  <button onClick={() => onDeleteProduct(product._id)} className="delete-button">
+                    Eliminar
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
