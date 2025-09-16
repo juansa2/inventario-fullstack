@@ -178,3 +178,7 @@ button[type="submit"]:hover {
   justify-content: center;
   gap: 8px;
 }
+
+.cell-center {
+  text-align: center;
+}
