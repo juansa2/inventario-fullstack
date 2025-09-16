@@ -23,9 +23,27 @@ function App() {
     fetchProducts();
   }, []); // El array vacío [] significa que este efecto se ejecuta solo una vez, al principio.
 
-  const handleAddProduct = (newProduct) => {
-    setProducts([...products, newProduct]);
-  };
+const handleAddProduct = async (productData) => {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(productData),
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      // Añadimos a la lista el producto que nos devuelve el servidor (con su ID de la base de datos)
+      setProducts([...products, result.product]);
+    } else {
+      console.error('Error del servidor al añadir el producto');
+    }
+  } catch (error) {
+    console.error('Error de red al añadir el producto:', error);
+  }
+};
 
  // 3. NUEVA FUNCIÓN para manejar la eliminación
   const handleDeleteProduct = async (id) => {
