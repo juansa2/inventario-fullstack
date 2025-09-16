@@ -20,7 +20,14 @@ return (
             <tr key={product._id}>
               <td data-label="Nombre">{product.name}</td>
               <td data-label="Cantidad">{product.quantity}</td>
-              <td data-label="Precio">${product.price}</td>
+              <td data-label="Precio">
+                {product.price.toLocaleString('es-CO', {
+                  style: 'currency',
+                  currency: 'COP',
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                })}
+              </td>
               <td data-label="Acciones">
                 <div className="product-actions">
                   <button onClick={() => onEditClick(product)} className="edit-button">
