@@ -37,6 +37,10 @@ const handleSubmit = (event) => {
     // Si no, llamamos a la función de añadir
     onAddProduct(productData);
   }
+
+  setName('');
+  setQuantity('');
+  setPrice('');
 };
 
   return (
