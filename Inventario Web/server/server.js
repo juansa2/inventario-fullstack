@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 5000;
 
 // --- Middlewares ---
 const corsOptions = {
-  origin: 'https://inventario-fullstack-qsubjb7m1.vercel.app',
+  origin: 'https://inventario-fullstack.vercel.app/',
   optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
