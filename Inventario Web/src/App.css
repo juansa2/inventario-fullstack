@@ -179,6 +179,6 @@ button[type="submit"]:hover {
   gap: 8px;
 }
 
-.cell-center {
+.product-table .cell-center {
   text-align: center;
 }
