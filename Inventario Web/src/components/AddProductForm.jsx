@@ -2,82 +2,81 @@
 
 import { useState, useEffect } from 'react';
 
-function AddProductForm({ onAddProduct, productToEdit, onUpdateProduct }) { // 1. Recibimos el producto a editar
-  const [name, setName] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [price, setPrice] = useState('');
+function AddProductForm({ onAddProduct, productToEdit, onUpdateProduct }) {
+  // Nuevo estado para los campos de equipo de cómputo
+  const [tipo, setTipo] = useState('Laptop');
+  const [marca, setMarca] = useState('');
+  const [modelo, setModelo] = useState('');
+  const [serial, setSerial] = useState('');
+  const [usuarioAsignado, setUsuarioAsignado] = useState('');
 
-  // 2. Este useEffect se ejecuta cada vez que 'productToEdit' cambia
   useEffect(() => {
     if (productToEdit) {
-      // Si hay un producto para editar, rellenamos los campos
-      setName(productToEdit.name);
-      setQuantity(productToEdit.quantity);
-      setPrice(productToEdit.price);
+      // Rellenamos el formulario si estamos en modo edición
+      setTipo(productToEdit.tipo);
+      setMarca(productToEdit.marca);
+      setModelo(productToEdit.modelo);
+      setSerial(productToEdit.serial);
+      setUsuarioAsignado(productToEdit.usuarioAsignado);
     } else {
-      // Si no, limpiamos los campos (para volver al modo "Añadir")
-      setName('');
-      setQuantity('');
-      setPrice('');
+      // Limpiamos los campos para el modo "Añadir"
+      setTipo('Laptop');
+      setMarca('');
+      setModelo('');
+      setSerial('');
+      setUsuarioAsignado('');
     }
-  }, [productToEdit]); // La dependencia es 'productToEdit'
+  }, [productToEdit]);
 
-const handleSubmit = (event) => {
-  event.preventDefault();
-  const productData = {
-    name,
-    quantity: parseInt(quantity),
-    price: parseFloat(price)
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const computerData = { tipo, marca, modelo, serial, usuarioAsignado };
+
+    if (productToEdit) {
+      onUpdateProduct(productToEdit._id, computerData);
+    } else {
+      onAddProduct(computerData);
+    }
+
+    // Limpiamos el formulario después de enviar
+    setTipo('Laptop');
+    setMarca('');
+    setModelo('');
+    setSerial('');
+    setUsuarioAsignado('');
   };
-
-  if (productToEdit) {
-    // Si estamos en modo edición, llamamos a la función de actualizar
-    onUpdateProduct(productToEdit._id, productData);
-  } else {
-    // Si no, llamamos a la función de añadir
-    onAddProduct(productData);
-  }
-
-  setName('');
-  setQuantity('');
-  setPrice('');
-};
 
   return (
     <div className="form-container">
-      {/* 3. El título y el botón ahora cambian dinámicamente */}
-      <h2>{productToEdit ? 'Editando Producto' : 'Añadir Nuevo Producto'}</h2>
+      <h2>{productToEdit ? 'Editando Equipo' : 'Añadir Nuevo Equipo'}</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Nombre:</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
+          <label>Tipo:</label>
+          <select value={tipo} onChange={(e) => setTipo(e.target.value)} required>
+            <option value="Laptop">Laptop</option>
+            <option value="Desktop">Desktop</option>
+            <option value="Servidor">Servidor</option>
+            <option value="Otro">Otro</option>
+          </select>
         </div>
         <div>
-          <label>Cantidad:</label>
-          <input
-            type="number"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-            required
-          />
+          <label>Marca:</label>
+          <input type="text" value={marca} onChange={(e) => setMarca(e.target.value)} required />
         </div>
         <div>
-          <label>Precio:</label>
-          <input
-            type="number"
-            step="0.01"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            required
-          />
+          <label>Modelo:</label>
+          <input type="text" value={modelo} onChange={(e) => setModelo(e.target.value)} required />
+        </div>
+        <div>
+          <label>Serial:</label>
+          <input type="text" value={serial} onChange={(e) => setSerial(e.target.value)} required />
+        </div>
+        <div>
+          <label>Usuario Asignado:</label>
+          <input type="text" value={usuarioAsignado} onChange={(e) => setUsuarioAsignado(e.target.value)} />
         </div>
         <button type="submit">
-          {productToEdit ? 'Actualizar Producto' : 'Añadir Producto'}
+          {productToEdit ? 'Actualizar Equipo' : 'Añadir Equipo'}
         </button>
       </form>
     </div>

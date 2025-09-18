@@ -1,39 +1,35 @@
 // src/components/ProductList.jsx
-import { useState } from 'react'; // ¡Añadimos useState!
 
 function ProductList({ products, onDeleteProduct, onEditClick }) {
-  // Por ahora, solo devolveremos un título.
-return (
+  // Cambiamos el nombre de la variable en el map a "computer" para más claridad
+  return (
     <div className="product-list-container">
-      <h2>Lista de Productos</h2>
+      <h2>Lista de Equipos</h2>
       <table className="product-table">
         <thead>
           <tr>
-            <th>Nombre</th>
-            <th>Cantidad</th>
-            <th>Precio</th>
-            <th>Acciones</th>
+            <th>Tipo</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Serial</th>
+            <th>Usuario Asignado</th>
+            <th className="cell-center">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {products.map(product => (
-            <tr key={product._id}>
-              <td data-label="Nombre">{product.name}</td>
-              <td data-label="Cantidad" className="cell-center">{product.quantity}</td>
-              <td data-label="Precio">
-                {product.price.toLocaleString('es-CO', {
-                  style: 'currency',
-                  currency: 'COP',
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
-                })}
-              </td>
+          {products.map(computer => (
+            <tr key={computer._id}>
+              <td data-label="Tipo">{computer.tipo}</td>
+              <td data-label="Marca">{computer.marca}</td>
+              <td data-label="Modelo">{computer.modelo}</td>
+              <td data-label="Serial">{computer.serial}</td>
+              <td data-label="Usuario">{computer.usuarioAsignado || 'Sin asignar'}</td>
               <td data-label="Acciones">
                 <div className="product-actions">
-                  <button onClick={() => onEditClick(product)} className="edit-button">
+                  <button onClick={() => onEditClick(computer)} className="edit-button">
                     Editar
                   </button>
-                  <button onClick={() => onDeleteProduct(product._id)} className="delete-button">
+                  <button onClick={() => onDeleteProduct(computer._id)} className="delete-button">
                     Eliminar
                   </button>
                 </div>
@@ -46,4 +42,4 @@ return (
   );
 }
 
-export default ProductList; // ¡Muy importante! Esto permite que otros archivos usen este componente.
+export default ProductList;
