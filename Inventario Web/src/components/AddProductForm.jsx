@@ -32,6 +32,14 @@ function AddProductForm({ onAddProduct, productToEdit, onUpdateProduct }) {
     } else {
       onAddProduct(computerData);
     }
+      // limpiar manualmente después de añadir un nuevo equipo.
+    if (!productToEdit) {
+      setTipo('Laptop');
+      setMarca('');
+      setModelo('');
+      setSerial('');
+      setUsuarioAsignado('');
+    }
   };
 
   return (
