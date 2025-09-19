@@ -3,23 +3,20 @@
 import { useState, useEffect } from 'react';
 
 function AddProductForm({ onAddProduct, productToEdit, onUpdateProduct }) {
-  // Nuevo estado para los campos de equipo de cómputo
   const [tipo, setTipo] = useState('Laptop');
   const [marca, setMarca] = useState('');
   const [modelo, setModelo] = useState('');
-  const [serial, setSerial] = useState('');
+  const [serial, setSerial] = useState(''); // Estado para el serial
   const [usuarioAsignado, setUsuarioAsignado] = useState('');
 
   useEffect(() => {
     if (productToEdit) {
-      // Rellenamos el formulario si estamos en modo edición
       setTipo(productToEdit.tipo);
       setMarca(productToEdit.marca);
       setModelo(productToEdit.modelo);
       setSerial(productToEdit.serial);
       setUsuarioAsignado(productToEdit.usuarioAsignado);
     } else {
-      // Limpiamos los campos para el modo "Añadir"
       setTipo('Laptop');
       setMarca('');
       setModelo('');
@@ -30,6 +27,7 @@ function AddProductForm({ onAddProduct, productToEdit, onUpdateProduct }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    // ¡Asegúrate de que 'serial' esté incluido en este objeto!
     const computerData = { tipo, marca, modelo, serial, usuarioAsignado };
 
     if (productToEdit) {
@@ -37,36 +35,15 @@ function AddProductForm({ onAddProduct, productToEdit, onUpdateProduct }) {
     } else {
       onAddProduct(computerData);
     }
-
-    // Limpiamos el formulario después de enviar
-    setTipo('Laptop');
-    setMarca('');
-    setModelo('');
-    setSerial('');
-    setUsuarioAsignado('');
+    
+    // El formulario no se limpia aquí, se limpia en App.jsx o por el useEffect
   };
 
   return (
     <div className="form-container">
       <h2>{productToEdit ? 'Editando Equipo' : 'Añadir Nuevo Equipo'}</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Tipo:</label>
-          <select value={tipo} onChange={(e) => setTipo(e.target.value)} required>
-            <option value="Laptop">Laptop</option>
-            <option value="Desktop">Desktop</option>
-            <option value="Servidor">Servidor</option>
-            <option value="Otro">Otro</option>
-          </select>
-        </div>
-        <div>
-          <label>Marca:</label>
-          <input type="text" value={marca} onChange={(e) => setMarca(e.target.value)} required />
-        </div>
-        <div>
-          <label>Modelo:</label>
-          <input type="text" value={modelo} onChange={(e) => setModelo(e.target.value)} required />
-        </div>
+        {/* ... otros campos ... */}
         <div>
           <label>Serial:</label>
           <input type="text" value={serial} onChange={(e) => setSerial(e.target.value)} required />
