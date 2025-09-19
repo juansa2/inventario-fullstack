@@ -1,7 +1,4 @@
-// src/components/ProductList.jsx
-
 function ProductList({ products, onDeleteProduct, onEditClick }) {
-  // Cambiamos el nombre de la variable en el map a "computer" para más claridad
   return (
     <div className="product-list-container">
       <h2>Lista de Equipos</h2>
