@@ -1,0 +1,49 @@
+/* src/pages/HomePage.css */
+
+.home-container {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.home-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.home-container p {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 40px;
+}
+
+.home-actions {
+  display: flex;
+  gap: 20px; /* Espacio entre los botones */
+}
+
+.home-button {
+  text-decoration: none;
+  color: white;
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.home-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.home-button.primary {
+  background-color: #28a745;
+}
+
+.home-button.secondary {
+  background-color: #007bff;
+}
