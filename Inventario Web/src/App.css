@@ -1,18 +1,25 @@
 /* src/App.css */
 
 /* Estilos generales y de la fuente */
+/* En src/App.css */
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   background-color: #f4f7f6;
   color: #333;
   margin: 0;
-  padding: 20px;
+  
+  /* --- AÑADE ESTO --- */
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center;    /* Centra verticalmente */
+  min-height: 100vh;      /* Ocupa toda la altura de la pantalla */
 }
 
 /* Contenedor principal para centrar la aplicación */
+/* En src/App.css */
 .app-container {
   max-width: 800px;
-  margin: 0 auto;
+  width: 90%; /* Para que se vea bien en pantallas pequeñas */
   background-color: #ffffff;
   padding: 20px 40px;
   border-radius: 10px;
