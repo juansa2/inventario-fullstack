@@ -1,4 +1,3 @@
-// server/server.js (Versión Final y Completa)
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -7,20 +6,17 @@ const Computer = require('./models/computer');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// --- Middlewares ---
 const corsOptions = {
   origin: [
-    'https://inventario-fullstack.vercel.app' 
+    'https://inventario-fullstack.vercel.app'
+     // Puedes ajustar o quitar esta si tu URL cambió
   ],
   optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// --- Rutas ---
-app.get('/', (req, res) => {
-  res.send('El servidor está funcionando y conectado a la base de datos.');
-});
+app.get('/', (req, res) => res.send('Servidor de inventario funcionando.'));
 
 app.post('/api/products', async (req, res) => {
   try {
@@ -64,7 +60,6 @@ app.put('/api/products/:id', async (req, res) => {
   }
 });
 
-// --- Conexión a MongoDB y Arranque del Servidor ---
 const MONGO_URI = process.env.MONGO_URI;
 
 mongoose.connect(MONGO_URI)
