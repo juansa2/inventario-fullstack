@@ -1,0 +1,24 @@
+/* src/pages/forms.css */
+
+.form-page {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Reutilizamos el .form-container que ya teníamos */
+.form-container {
+  width: 100%;
+  max-width: 400px; /* Hacemos los formularios de login/registro más angostos */
+}
+
+.error-message {
+  color: #dc3545;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  margin-top: 15px;
+}
