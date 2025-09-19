@@ -31,9 +31,6 @@ function AddProductForm({ onAddProduct, productToEdit, onUpdateProduct }) {
       onUpdateProduct(productToEdit._id, computerData);
     } else {
       onAddProduct(computerData);
-    }
-      // limpiar manualmente después de añadir un nuevo equipo.
-    if (!productToEdit) {
       setTipo('Laptop');
       setMarca('');
       setModelo('');
