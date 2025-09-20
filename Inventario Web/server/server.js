@@ -29,13 +29,13 @@ app.post('/api/auth/register', async (req, res) => {
     }
     user = new User({ name, email, password });
     await user.save();
-
     const payload = { user: { userId: user.id } };
     jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '5h' }, (err, token) => {
       if (err) throw err;
       res.status(201).json({ token });
     });
   } catch (error) {
+    console.error(error.message);
     res.status(500).send('Error en el servidor');
   }
 });
@@ -58,6 +58,7 @@ app.post('/api/auth/login', async (req, res) => {
       res.json({ token });
     });
   } catch (error) {
+    console.error(error.message);
     res.status(500).send('Error en el servidor');
   }
 });
