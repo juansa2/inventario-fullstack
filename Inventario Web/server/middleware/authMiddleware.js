@@ -15,7 +15,7 @@ const authMiddleware = (req, res, next) => {
     // Verificamos el token con nuestro secreto
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     // Añadimos los datos del usuario (el payload del token) al objeto 'req'
-    req.user = decoded; 
+    req.user = decoded.user; 
     next(); // Pasamos al siguiente paso (la ruta real)
   } catch (error) {
     res.status(403).json({ message: 'Token inválido.' });
