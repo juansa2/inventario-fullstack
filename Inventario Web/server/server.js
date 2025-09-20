@@ -1,62 +1,53 @@
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
-const Computer = require('./models/computer');
-const User = require('./models/user');
-const authMiddleware = require('./middleware/authMiddleware');
-
-const app = express();
-const PORT = process.env.PORT || 5000;
-
-// --- Middlewares ---
-const corsOptions = {
-  origin: [
-    'https://inventario-fullstack.vercel.app',
-    'https://inventario-fullstack-juansa2.vercel.app' // Asegúrate de tener todas tus URLs de Vercel
-  ],
-  optionsSuccessStatus: 200
-};
-app.use(cors(corsOptions));
-app.use(express.json());
-
-// --- Rutas Públicas (Autenticación) ---
-app.get('/', (req, res) => res.send('Servidor de inventario funcionando.'));
-
-app.post('/api/auth/register', async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: 'El correo electrónico ya está en uso.' });
-    }
-    const user = new User({ email, password });
-    await user.save();
-    res.status(201).json({ message: 'Usuario registrado exitosamente.' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error en el servidor al registrar.', error: error.message });
-  }
-});
-
-app.post('/api/auth/login', async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ message: 'Credenciales inválidas.' });
-    }
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) {
-      return res.status(400).json({ message: 'Credenciales inválidas.' });
-    }
-    const payload = { userId: user._id };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.json({ message: 'Inicio de sesión exitoso.', token });
-  } catch (error) {
-    res.status(500).json({ message: 'Error en el servidor al iniciar sesión.', error: error.message });
-  }
-});
-
 // --- Middleware de Seguridad para Rutas de Inventario ---
 // A partir de aquí, todas las rutas a /api/products requerirán un token válido.
-app.use
+app.use('/api/products', authMiddleware);
+
+// --- Rutas Protegidas (Inventario) ---
+
+// POST: Añadir un nuevo equipo (asigna el dueño automáticamente)
+app.post('/api/products', async (req, res) => {
+  try {
+    const newComputer = new Computer({
+      ...req.body,
+      user: req.user.userId
+    });
+    await newComputer.save();
+    res.status(201).json({ message: 'Equipo guardado', product: newComputer });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al guardar el equipo', error: error.message });
+  }
+});
+
+// GET: Obtener solo los equipos del usuario logueado
+app.get('/api/products', async (req, res) => {
+  try {
+    // AQUÍ ESTÁ LA RUTA GET QUE BUSCAS, YA CORREGIDA:
+    const computers = await Computer.find({ user: req.user.userId });
+    res.json(computers);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener los equipos' });
+  }
+});
+
+// DELETE: Eliminar un equipo (solo si le pertenece al usuario)
+app.delete('/api/products/:id', async (req, res) => {
+  try {
+    const deletedComputer = await Computer.findOneAndDelete({ _id: req.params.id, user: req.user.userId });
+    if (!deletedComputer) return res.status(404).json({ message: 'Equipo no encontrado o no autorizado' });
+    res.json({ message: 'Equipo eliminado exitosamente' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al eliminar el equipo' });
+  }
+});
+
+// PUT: Actualizar un equipo (solo si le pertenece al usuario)
+app.put('/api/products/:id', async (req, res) => {
+  try {
+    const updatedData = req.body;
+    const updatedComputer = await Computer.findOneAndUpdate({ _id: req.params.id, user: req.user.userId }, updatedData, { new: true });
+    if (!updatedComputer) return res.status(404).json({ message: 'Equipo no encontrado o no autorizado' });
+    res.json({ message: 'Equipo actualizado exitosamente', product: updatedComputer });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al actualizar el equipo' });
+  }
+});
