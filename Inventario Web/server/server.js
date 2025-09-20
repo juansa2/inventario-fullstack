@@ -1,3 +1,4 @@
+const authMiddleware = require('./middleware/authMiddleware');
 // --- Middleware de Seguridad para Rutas de Inventario ---
 // A partir de aquí, todas las rutas a /api/products requerirán un token válido.
 app.use('/api/products', authMiddleware);
