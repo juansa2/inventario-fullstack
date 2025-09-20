@@ -33,6 +33,9 @@ h1, h2 {
 
 /* Estilos del formulario */
 .form-container {
+  max-width: 500px;    /* Le damos un ancho máximo para que no sea tan grande */
+  margin-left: auto;   /* Margen automático a la izquierda */
+  margin-right: auto;  /* Margen automático a la derecha */
   margin-bottom: 40px;
   padding: 20px;
   border: 1px solid #e0e0e0;
