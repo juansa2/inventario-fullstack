@@ -22,8 +22,6 @@ const ProtectedRoute = ({ children }) => {
 
 function App() {
   return (
-    // --- 2. AHORA <Router> FUNCIONARÁ ---
-    <Router>
       <div className="app">
         <header className="App-header">
             <h1>Sistema de Inventario</h1>
@@ -42,7 +40,6 @@ function App() {
           </Routes>
         </main>
       </div>
-    </Router>
   );
 }
 
