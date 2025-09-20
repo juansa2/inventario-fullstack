@@ -14,7 +14,7 @@ function InventoryPage() {
 
  const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate('/login');
+    navigate('/');
   };
 
   const getAuthHeaders = () => {
