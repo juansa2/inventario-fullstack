@@ -8,6 +8,11 @@ const computerSchema = new mongoose.Schema({
   modelo: { type: String, required: true },
   serial: { type: String, required: true, unique: true },
   usuarioAsignado: { type: String, default: 'Sin asignar' },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', // Esto crea una referencia al modelo User
+    required: true
+  },
   fechaAdquisicion: { type: Date, default: Date.now }
 });
 
