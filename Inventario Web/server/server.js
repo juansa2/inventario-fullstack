@@ -6,8 +6,8 @@ const jwt = require('jsonwebtoken');
 const path = 'path';
 
 const connectDB = require('./config/db');
-const User = require('./models/User');
-const Computer = require('./models/Computer');
+const User = require('./models/user');
+const Computer = require('./models/computer');
 const authMiddleware = require('./middleware/authMiddleware');
 
 // --- Inicialización y Configuración ---
