@@ -1,7 +1,7 @@
 // src/pages/InventoryPage.jsx
 
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import AddProductForm from '../components/AddProductForm.jsx';
 import ProductList from '../components/ProductList.jsx';
 
@@ -96,6 +96,7 @@ function InventoryPage() {
     <>
       <div className="inventory-header">
         <h1>Mi Gestor de Inventario</h1>
+        <Link to="/change-password" className="action-link">Cambiar Contraseña</Link>
         <button onClick={handleLogout} className="logout-button">Cerrar Sesión</button>
       </div>
       <AddProductForm

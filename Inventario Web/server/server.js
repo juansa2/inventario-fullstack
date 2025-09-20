@@ -133,6 +133,41 @@ app.put('/api/products/:id', async (req, res) => {
   }
 });
 
+// --- RUTA PARA CAMBIO DE CONTRASEÑA ---
+app.put('/api/auth/change-password', authMiddleware, async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const userId = req.user.userId;
+
+  try {
+    // 1. Buscar al usuario en la base de datos
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado.' });
+    }
+
+    // 2. Verificar que la contraseña actual es correcta
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'La contraseña actual es incorrecta.' });
+    }
+
+    // 3. Validar la nueva contraseña (opcional, pero recomendado)
+    if (!newPassword || newPassword.length < 6) {
+      return res.status(400).json({ message: 'La nueva contraseña debe tener al menos 6 caracteres.' });
+    }
+
+    // 4. Hashear y guardar la nueva contraseña
+    user.password = newPassword; // El hash se hace automáticamente gracias al .pre('save') en el modelo User
+    await user.save();
+
+    res.json({ message: 'Contraseña actualizada exitosamente.' });
+
+  } catch (error) {
+    console.error('Error al cambiar contraseña:', error);
+    res.status(500).json({ message: 'Error interno del servidor.' });
+  }
+});
+
 // --- Servir Frontend en Producción ---
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../dist')));
