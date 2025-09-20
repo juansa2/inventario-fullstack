@@ -189,3 +189,18 @@ button[type="submit"]:hover {
 .product-table .cell-center {
   text-align: center;
 }
+
+.inventory-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.logout-button {
+  background-color: #6c757d;
+  color: white;
+}
+.logout-button:hover {
+  background-color: #5a6268;
+}
