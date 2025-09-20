@@ -80,7 +80,23 @@ app.post('/api/products', async (req, res) => {
     await newComputer.save();
     res.status(201).json({ message: 'Equipo guardado', product: newComputer });
   } catch (error) {
-    res.status(500).json({ message: 'Error al guardar el equipo', error: error.message });
+    // --- INICIO DE LA MEJORA ---
+    console.error('Error al guardar:', error); // Log detallado en el servidor
+
+    // Si es un error de duplicado (código 11000)
+    if (error.code === 11000) {
+      return res.status(400).json({ message: 'Error: El número de serie ya existe en el inventario.' });
+    }
+
+    // Si es un error de validación de Mongoose
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(val => val.message);
+      return res.status(400).json({ message: `Error de validación: ${messages.join(', ')}` });
+    }
+
+    // Para cualquier otro error
+    res.status(500).json({ message: 'Error interno al guardar el equipo.' });
+    // --- FIN DE LA MEJORA ---
   }
 });
 
