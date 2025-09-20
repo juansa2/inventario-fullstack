@@ -95,7 +95,6 @@ function InventoryPage() {
   return (
     <>
       <div className="inventory-header">
-        <h1>Mi Gestor de Inventario</h1>
         <Link to="/change-password" className="action-link">Cambiar Contraseña</Link>
         <button onClick={handleLogout} className="logout-button">Cerrar Sesión</button>
       </div>
