@@ -1,74 +1,67 @@
-// src/pages/LoginPage.jsx
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+// 1. Importamos la función de login desde nuestro servicio
+import { loginUser } from '../services/api';
 
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './forms.css'; // Reutilizamos los estilos de formulario
-
-function LoginPage() {
+const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setError(null);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Error al iniciar sesión.');
-      }
-
-      // ¡Paso Clave! Guardamos el "pase de acceso" en el navegador
+      // 2. Usamos la función importada. ¡Mucho más limpio!
+      const data = await loginUser({ email, password });
+      
       localStorage.setItem('token', data.token);
-
-      // Redirigimos al inventario
       navigate('/inventory');
-
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Error al iniciar sesión. Verifique sus credenciales.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="form-page">
-      <div className="form-container">
-        <h2>Iniciar Sesión</h2>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label>Correo Electrónico:</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>Contraseña:</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          {error && <p className="error-message">{error}</p>}
-          <button type="submit">Entrar</button>
-        </form>
-      </div>
+    <div className="form-container">
+      <h2>Iniciar Sesión</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="password">Contraseña</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit" className="btn" disabled={isLoading}>
+          {isLoading ? 'Iniciando...' : 'Iniciar Sesión'}
+        </button>
+      </form>
+      {error && <p className="error-message">{error}</p>}
+      <p className="form-switch">
+        ¿No tienes una cuenta? <Link to="/register">Regístrate aquí</Link>
+      </p>
     </div>
   );
-}
+};
 
 export default LoginPage;

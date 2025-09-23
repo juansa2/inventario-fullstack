@@ -1,9 +1,9 @@
-// src/pages/InventoryPage.jsx
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AddProductForm from '../components/AddProductForm.jsx';
 import ProductList from '../components/ProductList.jsx';
+// 1. Importamos las funciones centralizadas desde nuestro servicio de API
+import { getInventory, addProduct, deleteProduct, updateProduct } from '../services/api.js';
 
 function InventoryPage() {
   const [products, setProducts] = useState([]);
@@ -15,29 +15,21 @@ function InventoryPage() {
     navigate('/');
   };
 
-  // Función auxiliar para obtener los encabezados con el token
-  const getAuthHeaders = () => {
-    const token = localStorage.getItem('token');
-    return {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    };
-  };
+  // La función getAuthHeaders() ya no es necesaria aquí.
+  // Su lógica ahora vive dentro de /services/api.js y se usa automáticamente.
 
+  // 2. Usamos las nuevas funciones, haciendo el código más limpio
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products`, {
-          headers: getAuthHeaders() // <-- USAR HEADERS
-        });
-        if (!response.ok) {
-          if (response.status === 401 || response.status === 403) handleLogout();
-          throw new Error('No se pudo cargar el inventario.');
-        }
-        const data = await response.json();
+        const data = await getInventory(); // <-- MÁS SIMPLE
         setProducts(data);
       } catch (error) {
         console.error(error.message);
+        // Si el token es inválido o no existe, el error lo indicará y cerramos sesión
+        if (error.message.includes('inválido') || error.message.includes('denegada')) {
+          handleLogout();
+        }
       }
     };
     fetchProducts();
@@ -45,43 +37,31 @@ function InventoryPage() {
 
   const handleAddProduct = async (productData) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products`, {
-        method: 'POST',
-        headers: getAuthHeaders(), // <-- USAR HEADERS
-        body: JSON.stringify(productData),
-      });
-      if (!response.ok) throw new Error('Error al añadir el equipo.');
-      const newData = await response.json();
-      setProducts([...products, newData.product]);
+      const newData = await addProduct(productData); // <-- MÁS SIMPLE
+      setProducts(prev => [...prev, newData.product]);
     } catch (error) {
       console.error(error.message);
+      // Aquí podrías añadir una notificación de error para el usuario
     }
   };
 
   const handleDeleteProduct = async (id) => {
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${id}`, {
-        method: 'DELETE',
-        headers: getAuthHeaders(), // <-- USAR HEADERS
-      });
-      if (!response.ok) throw new Error('Error al eliminar el equipo.');
-      setProducts(products.filter(p => p._id !== id));
-    } catch (error) {
-      console.error(error.message);
+    // Añadimos una confirmación para mejorar la experiencia de usuario
+    if (window.confirm('¿Estás seguro de que quieres eliminar este equipo?')) {
+      try {
+        await deleteProduct(id); // <-- MÁS SIMPLE
+        setProducts(products.filter(p => p._id !== id));
+      } catch (error) {
+        console.error(error.message);
+      }
     }
   };
 
   const handleUpdateProduct = async (id, updatedData) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${id}`, {
-        method: 'PUT',
-        headers: getAuthHeaders(), // <-- USAR HEADERS
-        body: JSON.stringify(updatedData),
-      });
-      if (!response.ok) throw new Error('Error al actualizar el equipo.');
-      const { product: updatedProduct } = await response.json();
+      const { product: updatedProduct } = await updateProduct(id, updatedData); // <-- MÁS SIMPLE
       setProducts(products.map(p => (p._id === id ? updatedProduct : p)));
-      setProductToEdit(null);
+      setProductToEdit(null); // Limpiamos el formulario
     } catch (error) {
       console.error(error.message);
     }
@@ -89,14 +69,17 @@ function InventoryPage() {
 
   const handleEditClick = (product) => {
     setProductToEdit(product);
-    window.scrollTo(0, 0);
+    window.scrollTo(0, 0); // Sube la vista al formulario de edición
   };
 
+  // 3. El JSX se mantiene, pero envolvemos los botones para un mejor estilo
   return (
     <>
       <div className="inventory-header">
-        <Link to="/change-password" className="action-link">Cambiar Contraseña</Link>
-        <button onClick={handleLogout} className="logout-button">Cerrar Sesión</button>
+        <div className="user-actions">
+          <Link to="/change-password" className="action-link">Cambiar Contraseña</Link>
+          <button onClick={handleLogout} className="logout-button">Cerrar Sesión</button>
+        </div>
       </div>
       <AddProductForm
         onAddProduct={handleAddProduct}

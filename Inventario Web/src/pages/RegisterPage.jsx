@@ -1,73 +1,79 @@
-// src/pages/RegisterPage.jsx
+// filepath: d:/Programacion/Ejemplo Pagina Web Inventarios/Inventario Web/src/pages/RegisterPage.jsx
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+// 1. Importamos la función de registro
+import { registerUser } from '../services/api';
 
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './forms.css'; // Usaremos un archivo de estilos común para los formularios
-
-function RegisterPage() {
+const RegisterPage = () => {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Hook para redirigir al usuario
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setError(null); // Limpiar errores anteriores
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      // 2. Usamos la función importada
+      const data = await registerUser({ username, email, password });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        // Si el servidor responde con un error (ej. email ya existe)
-        throw new Error(data.message || 'Error al registrar el usuario.');
-      }
-
-      // Si el registro es exitoso, redirigimos al login
-      navigate('/login');
-
+      localStorage.setItem('token', data.token);
+      navigate('/inventory');
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Error al registrarse. Intente de nuevo.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="form-page">
-      <div className="form-container">
-        <h2>Crear Nueva Cuenta</h2>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label>Correo Electrónico:</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>Contraseña:</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength="6"
-            />
-          </div>
-          {error && <p className="error-message">{error}</p>}
-          <button type="submit">Registrarse</button>
-        </form>
-      </div>
+    <div className="form-container">
+      <h2>Registro de Nuevo Usuario</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="username">Nombre de Usuario</label>
+          <input
+            type="text"
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="password">Contraseña</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit" className="btn" disabled={isLoading}>
+          {isLoading ? 'Registrando...' : 'Registrarse'}
+        </button>
+      </form>
+      {error && <p className="error-message">{error}</p>}
+      <p className="form-switch">
+        ¿Ya tienes una cuenta? <Link to="/login">Inicia sesión aquí</Link>
+      </p>
     </div>
   );
-}
+};
 
 export default RegisterPage;
