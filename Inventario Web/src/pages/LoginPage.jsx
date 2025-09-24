@@ -30,8 +30,8 @@ const LoginPage = () => {
     try {
       // Llama a la función 'loginUser' de la API con las credenciales del formulario.
       const data = await loginUser({ email, password });
-      // Llama a la función 'login' del contexto, pasándole el nuevo token.
-      login(data.token);
+      // Llama a la función 'login' del contexto y espera a que termine.
+      await login(data.token);
       // Redirige al usuario a la página principal del inventario.
       navigate('/inventory');
     } catch (err) {

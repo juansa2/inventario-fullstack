@@ -1,5 +1,5 @@
 // Importa las funcionalidades de React: el núcleo, la creación de contexto, y los hooks 'useState', 'useContext', 'useEffect'.
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useRef } from 'react';
 // Importa la función 'getMe' desde 'api.js' para obtener los datos del usuario autenticado.
 import { getMe } from '../services/api';
 
@@ -46,33 +46,37 @@ export const AuthProvider = ({ children }) => {
         // Si no hay token, asegura que el usuario sea nulo.
         setUser(null);
       }
-      // Una vez terminada la verificación inicial, establece 'loading' a 'false'.
+      // Una vez terminada la verificación, establece 'loading' a 'false'.
       setLoading(false);
+      // Si había una promesa de login pendiente, la resolvemos ahora que los datos están listos.
+      if (loginPromiseResolveRef.current) {
+        loginPromiseResolveRef.current();
+        loginPromiseResolveRef.current = null;
+      }
     };
 
     // Llama a la función para que se ejecute.
     fetchUser();
   }, [token]); // Este efecto se ejecuta cada vez que el token cambia.
 
-  // Define la función 'login' que será accesible desde el contexto.
+  // Define la función 'login' que devuelve una promesa.
   const login = (newToken) => {
-    // Activa el estado de carga de autenticación.
-    setIsAuthLoading(true);
-    // Actualiza el estado del token, lo que disparará el useEffect para obtener los datos del usuario.
-    setToken(newToken);
+    return new Promise((resolve) => {
+      // Guardamos la función 'resolve' de la promesa en nuestra referencia.
+      loginPromiseResolveRef.current = resolve;
+      // Actualizamos el estado del token, lo que disparará el useEffect.
+      setToken(newToken);
+    });
   };
 
   // Define la función 'logout' que será accesible desde el contexto.
   const logout = () => {
-    // Activa el estado de carga de autenticación.
-    setIsAuthLoading(true);
     // Establece el token a null, lo que disparará el useEffect para limpiar el estado.
     setToken(null);
   };
 
   // Crea el objeto 'value' que contendrá todos los datos y funciones que el proveedor hará disponibles.
-  // El estado de carga general es la combinación de la carga inicial Y la carga de autenticación.
-  const value = { user, isAuthenticated: !!user, loading: loading || isAuthLoading, login, logout };
+  const value = { user, isAuthenticated: !!user, loading, login, logout };
 
   // Renderiza el proveedor del contexto, pasando el objeto 'value' y renderizando los componentes hijos.
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
