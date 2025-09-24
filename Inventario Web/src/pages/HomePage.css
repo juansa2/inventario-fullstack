@@ -1,49 +1,46 @@
-/* src/pages/HomePage.css */
-
+/* Contenedor principal de la página de inicio. */
 .home-container {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
+  text-align: center; /* Centra todo el texto. */
+  padding: 40px 20px; /* Añade espacio interior. */
 }
 
-.home-container h1 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
-}
-
+/* Estilo para el párrafo de descripción. */
 .home-container p {
-  font-size: 1.2rem;
-  color: #555;
-  margin-bottom: 40px;
+  color: #666; /* Un color de texto más suave. */
+  font-size: 1.1rem; /* Tamaño de fuente ligeramente más grande. */
+  margin-bottom: 30px; /* Espacio debajo del párrafo. */
 }
 
+/* Contenedor para los botones de acción. */
 .home-actions {
-  display: flex;
-  gap: 20px; /* Espacio entre los botones */
+  display: flex; /* Usa flexbox para alinear los botones. */
+  justify-content: center; /* Centra los botones horizontalmente. */
+  gap: 20px; /* Espacio entre los botones. */
 }
 
+/* Estilo base para los botones de la página de inicio. */
 .home-button {
-  text-decoration: none;
-  color: white;
-  padding: 15px 30px;
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 1rem;
-  transition: transform 0.2s, box-shadow 0.2s;
+  padding: 12px 25px; /* Espaciado interior del botón. */
+  text-decoration: none; /* Quita el subrayado de los enlaces. */
+  border-radius: 5px; /* Bordes redondeados. */
+  font-weight: bold; /* Texto en negrita. */
+  transition: transform 0.2s, box-shadow 0.2s; /* Transición suave para efectos. */
+}
+
+/* Estilo para el botón primario (Iniciar Sesión). */
+.home-button.primary {
+  background-color: #007bff; /* Color de fondo azul. */
+  color: white; /* Texto blanco. */
+}
+
+/* Estilo para el botón secundario (Crear Cuenta). */
+.home-button.secondary {
+  background-color: #f0f0f0; /* Fondo gris claro. */
+  color: #333; /* Texto oscuro. */
+  border: 1px solid #ccc; /* Borde sutil. */
 }
 
 .home-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.home-button.primary {
-  background-color: #28a745;
-}
-
-.home-button.secondary {
-  background-color: #007bff;
+  transform: translateY(-2px); /* Eleva ligeramente el botón al pasar el mouse. */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Añade una sombra. */
 }

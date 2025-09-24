@@ -1,35 +1,53 @@
-// src/App.jsx
+// Importa la librería principal de React.
 import React from 'react';
-// --- 1. CORREGIR LA IMPORTACIÓN ---
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+// Importa los componentes necesarios de 'react-router-dom' para definir y gestionar las rutas.
+import { Routes, Route, Navigate } from 'react-router-dom';
+// Importa los componentes de página que se mostrarán según la ruta.
 import HomePage from './pages/HomePage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import InventoryPage from './pages/InventoryPage';
 import ChangePasswordPage from './pages/ChangePasswordPage';
-// No necesitas importar PrivateRoute si lo defines aquí mismo
+// Importa el hook 'useAuth' para acceder al estado de autenticación.
+import { useAuth } from './context/AuthContext';
+// Importa los estilos CSS principales de la aplicación.
 import './App.css';
 
-// Nuestro componente "Guardia de Seguridad"
+// Define un componente 'ProtectedRoute' mejorado que utiliza el contexto de autenticación.
 const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    // Si no hay token, redirige al login
+  // Obtiene el estado de autenticación y carga desde el AuthContext.
+  const { isAuthenticated, loading } = useAuth();
+
+  // Mientras se verifica el estado de autenticación, muestra un mensaje de carga.
+  // Esto evita redirecciones prematuras o parpadeos en la interfaz.
+  if (loading) {
+    return <div>Cargando sesión...</div>;
+  }
+
+  // Si la carga ha terminado y el usuario no está autenticado...
+  if (!isAuthenticated) {
+    // ...redirige al usuario a la página de inicio de sesión.
     return <Navigate to="/login" />;
   }
+  // Si el usuario está autenticado, renderiza el componente hijo (la página protegida).
   return children;
 };
 
+// Define el componente principal de la aplicación.
 function App() {
   return (
+      // Contenedor principal que aplica estilos de centrado y diseño desde 'App.css'.
       <div className="app-container">
+        {/* Título principal de la aplicación. */}
         <h1>Sistema de Inventario</h1>
         <main>
+          {/* El componente 'Routes' envuelve todas las definiciones de rutas individuales. */}
           <Routes>
+            {/* Define las rutas públicas que no requieren autenticación. */}
             <Route path="/" element={<HomePage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
-            {/* Tu código para las rutas protegidas ya es correcto */}
+            {/* Define las rutas protegidas, envolviendo el componente de la página con 'ProtectedRoute'. */}
             <Route path="/inventory" element={<ProtectedRoute><InventoryPage /></ProtectedRoute>} />
             <Route path="/change-password" element={<ProtectedRoute><ChangePasswordPage /></ProtectedRoute>} />
           </Routes>
@@ -38,4 +56,5 @@ function App() {
   );
 }
 
+// Exporta el componente 'App' para que pueda ser usado en 'main.jsx'.
 export default App;

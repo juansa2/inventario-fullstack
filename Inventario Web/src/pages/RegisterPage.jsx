@@ -1,51 +1,66 @@
-// filepath: d:/Programacion/Ejemplo Pagina Web Inventarios/Inventario Web/src/pages/RegisterPage.jsx
+// Importa React y el hook 'useState' para manejar el estado del formulario.
 import React, { useState } from 'react';
+// Importa 'Link' para la navegación y 'useNavigate' para redirigir programáticamente.
 import { Link, useNavigate } from 'react-router-dom';
-// 1. Importamos la función de registro
+// Importa la función 'registerUser' desde nuestro archivo de servicios de API.
 import { registerUser } from '../services/api';
 
+// Define el componente de la página de registro.
 const RegisterPage = () => {
-  const [username, setUsername] = useState('');
+  // Define estados para los campos del formulario, mensajes de error y estado de carga.
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  // Obtiene la función 'navigate' para redirigir al usuario después del registro.
   const navigate = useNavigate();
 
+  // Define la función que se ejecuta al enviar el formulario.
   const handleSubmit = async (e) => {
+    // Previene el comportamiento por defecto del formulario.
     e.preventDefault();
+    // Limpia cualquier error anterior y activa el estado de carga.
     setError('');
     setIsLoading(true);
 
     try {
-      // 2. Usamos la función importada
-      const data = await registerUser({ username, email, password });
+      // Llama a la función 'registerUser' de la API con los datos del formulario.
+      const data = await registerUser({ name, email, password });
 
+      // Si el registro es exitoso, guarda el token JWT en el almacenamiento local.
       localStorage.setItem('token', data.token);
+      // Redirige al usuario a la página de inventario.
       navigate('/inventory');
     } catch (err) {
+      // Si ocurre un error, actualiza el estado 'error' con el mensaje recibido de la API.
       setError(err.message || 'Error al registrarse. Intente de nuevo.');
     } finally {
+      // Se ejecuta siempre, tanto si hay éxito como si hay error. Desactiva el estado de carga.
       setIsLoading(false);
     }
   };
 
+  // Renderiza el JSX de la página.
   return (
     <div className="form-container">
       <h2>Registro de Nuevo Usuario</h2>
+      {/* Asocia la función 'handleSubmit' al evento 'onSubmit' del formulario. */}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="username">Nombre de Usuario</label>
+          <label htmlFor="name">Nombre Completo</label>
+          {/* Campo de texto para el nombre de usuario, controlado por el estado 'username'. */}
           <input
             type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             required
           />
         </div>
         <div className="form-group">
           <label htmlFor="email">Email</label>
+          {/* Campo de email, controlado por el estado 'email'. */}
           <input
             type="email"
             id="email"
@@ -56,6 +71,7 @@ const RegisterPage = () => {
         </div>
         <div className="form-group">
           <label htmlFor="password">Contraseña</label>
+          {/* Campo de contraseña, controlado por el estado 'password'. */}
           <input
             type="password"
             id="password"
@@ -64,11 +80,14 @@ const RegisterPage = () => {
             required
           />
         </div>
+        {/* Botón de envío. Se deshabilita y cambia de texto mientras 'isLoading' es verdadero. */}
         <button type="submit" className="btn" disabled={isLoading}>
           {isLoading ? 'Registrando...' : 'Registrarse'}
         </button>
       </form>
+      {/* Muestra el mensaje de error si el estado 'error' tiene un valor. */}
       {error && <p className="error-message">{error}</p>}
+      {/* Enlace para que los usuarios que ya tienen cuenta vayan a la página de login. */}
       <p className="form-switch">
         ¿Ya tienes una cuenta? <Link to="/login">Inicia sesión aquí</Link>
       </p>
@@ -76,4 +95,5 @@ const RegisterPage = () => {
   );
 };
 
+// Exporta el componente.
 export default RegisterPage;

@@ -1,21 +1,49 @@
-// server/models/computer.js
-
+// Importa la librería 'mongoose' para definir el esquema y el modelo.
 const mongoose = require('mongoose');
 
+// Define el esquema (la estructura) para los documentos de la colección de computadoras.
 const computerSchema = new mongoose.Schema({
-  tipo: { type: String, required: true, enum: ['Laptop', 'Desktop', 'Servidor', 'Otro'] },
-  marca: { type: String, required: true },
-  modelo: { type: String, required: true },
-  serial: { type: String, required: true, unique: true },
-  usuarioAsignado: { type: String, default: 'Sin asignar' },
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // Esto crea una referencia al modelo User
-    required: true
+  // Define el campo 'tipo' del equipo.
+  tipo: {
+    type: String, // El tipo de dato es una cadena de texto.
+    required: true, // Este campo es obligatorio.
+    enum: ['Laptop', 'Desktop', 'Servidor', 'Otro'] // Solo permite estos valores.
   },
-  fechaAdquisicion: { type: Date, default: Date.now }
+  // Define el campo 'marca'.
+  marca: {
+    type: String,
+    required: true, // Es obligatorio.
+    trim: true // Elimina espacios en blanco al principio y al final.
+  },
+  // Define el campo 'modelo'.
+  modelo: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  // Define el campo 'serial'.
+  serial: {
+    type: String,
+    required: true,
+    unique: true, // Asegura que no haya dos equipos con el mismo número de serie.
+    trim: true
+  },
+  // Define el campo 'usuarioAsignado'.
+  usuarioAsignado: {
+    type: String,
+    trim: true,
+    default: '' // Si no se proporciona, su valor será una cadena vacía.
+  },
+  // Define una referencia al usuario que creó el registro.
+  user: {
+    type: mongoose.Schema.Types.ObjectId, // El tipo es un ID de objeto de MongoDB.
+    ref: 'User', // Establece una relación con el modelo 'User'.
+    required: true
+  }
+}, {
+  // Añade automáticamente los campos 'createdAt' y 'updatedAt' a cada documento.
+  timestamps: true
 });
 
-const Computer = mongoose.model('Computer', computerSchema);
-
-module.exports = Computer;
+// Crea y exporta el modelo 'Computer' a partir del esquema definido.
+module.exports = mongoose.model('Computer', computerSchema);
