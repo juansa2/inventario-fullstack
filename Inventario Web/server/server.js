@@ -56,7 +56,10 @@ const corsOptions = {
       // Si no está, la rechaza con un error de CORS.
       callback(new Error('Not allowed by CORS'));
     }
-  }
+  },
+  // Permite explícitamente los métodos y cabeceras que tu aplicación utiliza.
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 };
 
 // Aplica el middleware CORS con las opciones definidas a todas las rutas de la aplicación.
