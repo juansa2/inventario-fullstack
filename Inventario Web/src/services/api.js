@@ -78,6 +78,12 @@ export const deleteMeal = (id) => apiFetch(`/meals/${id}`, { method: 'DELETE' })
 
 // Ingredientes
 export const getIngredients = () => apiFetch('/ingredients');
+export const addIngredient = (data) => apiFetch('/ingredients', { method: 'POST', body: JSON.stringify(data) });
+export const updateIngredient = (id, data) => apiFetch(`/ingredients/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+export const deleteIngredient = (id) => apiFetch(`/ingredients/${id}`, { method: 'DELETE' });
 
 // Licencias
 export const getLicenses = () => apiFetch('/licenses');
+export const addLicense = (data) => apiFetch('/licenses', { method: 'POST', body: JSON.stringify(data) });
+export const updateLicense = (id, data) => apiFetch(`/licenses/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+export const deleteLicense = (id) => apiFetch(`/licenses/${id}`, { method: 'DELETE' });
