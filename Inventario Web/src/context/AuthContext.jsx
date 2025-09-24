@@ -1,5 +1,5 @@
 // Importa las funcionalidades de React: el núcleo, la creación de contexto, y los hooks 'useState', 'useContext', 'useEffect'.
-import React, { createContext, useState, useContext, useEffect, useRef } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 // Importa la función 'getMe' desde 'api.js' para obtener los datos del usuario autenticado.
 import { getMe } from '../services/api';
 
@@ -14,8 +14,6 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
   // Define un estado 'loading' para la verificación inicial de la sesión.
   const [loading, setLoading] = useState(true);
-  // Define un estado 'isAuthLoading' para operaciones como login/logout.
-  const [isAuthLoading, setIsAuthLoading] = useState(false);
 
   // Hook 'useEffect' que se ejecuta cuando el valor de 'token' cambia.
   useEffect(() => {
@@ -46,27 +44,20 @@ export const AuthProvider = ({ children }) => {
         // Si no hay token, asegura que el usuario sea nulo.
         setUser(null);
       }
-      // Una vez terminada la verificación, establece 'loading' a 'false'.
+      // Una vez terminada la verificación, establece 'loading' a 'false' para indicar que la carga inicial ha finalizado.
       setLoading(false);
-      // Si había una promesa de login pendiente, la resolvemos ahora que los datos están listos.
-      if (loginPromiseResolveRef.current) {
-        loginPromiseResolveRef.current();
-        loginPromiseResolveRef.current = null;
-      }
     };
 
     // Llama a la función para que se ejecute.
     fetchUser();
   }, [token]); // Este efecto se ejecuta cada vez que el token cambia.
 
-  // Define la función 'login' que devuelve una promesa.
-  const login = (newToken) => {
-    return new Promise((resolve) => {
-      // Guardamos la función 'resolve' de la promesa en nuestra referencia.
-      loginPromiseResolveRef.current = resolve;
-      // Actualizamos el estado del token, lo que disparará el useEffect.
-      setToken(newToken);
-    });
+  // Define la función 'login' que será accesible desde el contexto.
+  const login = async (credentials) => {
+    // Llama a la API para obtener el token.
+    const data = await loginUser(credentials);
+    // Actualiza el estado del token, lo que disparará el useEffect para obtener los datos del usuario.
+    setToken(data.token);
   };
 
   // Define la función 'logout' que será accesible desde el contexto.
@@ -76,7 +67,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Crea el objeto 'value' que contendrá todos los datos y funciones que el proveedor hará disponibles.
-  const value = { user, isAuthenticated: !!user, loading, login, logout };
+  const value = { user, isAuthenticated: !!user, loading, login, logout, token };
 
   // Renderiza el proveedor del contexto, pasando el objeto 'value' y renderizando los componentes hijos.
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -2,8 +2,6 @@
 import React, { useState } from 'react';
 // Importa 'Link' para la navegación y 'useNavigate' para redirigir programáticamente.
 import { Link, useNavigate } from 'react-router-dom';
-// Importa la función 'loginUser' desde nuestro archivo de servicios de API.
-import { loginUser } from '../services/api';
 // Importa el hook 'useAuth' para acceder a la función de login del contexto.
 import { useAuth } from '../context/AuthContext';
 
@@ -28,10 +26,8 @@ const LoginPage = () => {
     setIsLoading(true);
 
     try {
-      // Llama a la función 'loginUser' de la API con las credenciales del formulario.
-      const data = await loginUser({ email, password });
-      // Llama a la función 'login' del contexto y espera a que termine.
-      await login(data.token);
+      // Llama a la función 'login' del contexto, que ahora maneja la obtención del token y la actualización del estado.
+      await login({ email, password });
       // Redirige al usuario a la página principal del inventario.
       navigate('/inventory');
     } catch (err) {
