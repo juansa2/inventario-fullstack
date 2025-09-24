@@ -58,11 +58,23 @@ export const changePassword = (passwords) => apiFetch('/auth/change-password', {
 export const getMe = () => apiFetch('/auth/me');
 
 // --- Funciones para Inventario (Productos) ---
-// Exporta una función para obtener la lista de equipos del inventario.
-export const getInventory = () => apiFetch('/products');
 // Exporta una función para añadir un nuevo producto.
 export const addProduct = (productData) => apiFetch('/products', { method: 'POST', body: JSON.stringify(productData) });
 // Exporta una función para actualizar un producto existente por su ID.
 export const updateProduct = (id, productData) => apiFetch(`/products/${id}`, { method: 'PUT', body: JSON.stringify(productData) });
 // Exporta una función para eliminar un producto por su ID.
 export const deleteProduct = (id) => apiFetch(`/products/${id}`, { method: 'DELETE' });
+
+// --- Funciones de Inventario Específicas ---
+
+// Computadores
+export const getComputers = () => apiFetch('/products');
+
+// Comidas
+export const getMeals = () => apiFetch('/meals');
+
+// Ingredientes
+export const getIngredients = () => apiFetch('/ingredients');
+
+// Licencias
+export const getLicenses = () => apiFetch('/licenses');

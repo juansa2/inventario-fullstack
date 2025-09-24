@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AddProductForm from '../components/AddProductForm.jsx';
 import ProductList from '../components/ProductList.jsx';
-import { getInventory, addProduct, deleteProduct, updateProduct } from '../services/api.js';
+import { getComputers, addProduct, deleteProduct, updateProduct } from '../services/api.js';
 
 function ComputersPage() {
   const [products, setProducts] = useState([]);
@@ -11,7 +11,7 @@ function ComputersPage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const data = await getInventory();
+        const data = await getComputers();
         setProducts(data);
       } catch (error) {
         console.error(error.message);
