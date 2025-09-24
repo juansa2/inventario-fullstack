@@ -80,11 +80,11 @@ app.post('/api/auth/register', async (req, res) => {
     await user.save();
     // Crea el payload para el JWT, que contiene el ID del usuario.
     const payload = { user: { userId: user.id } };
-    // Firma el token JWT con el payload, un secreto y una fecha de expiración.
+    // Firma el token JWT con el payload, un secreto y una fecha de expiración
     jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '5h' }, (err, token) => {
-      // Si hay un error al firmar el token, lo lanza.
+      // Si hay un error al firmar el token, lo lanza
       if (err) throw err;
-      // Si todo es correcto, devuelve un estado 201 (Created) y el token.
+      // Si todo es correcto, devuelve un estado 201 (Created) y el token
       res.status(201).json({ token });
     });
   } catch (error) {

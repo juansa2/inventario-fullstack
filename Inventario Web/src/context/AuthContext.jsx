@@ -1,5 +1,5 @@
 // Importa las funcionalidades de React: el núcleo, la creación de contexto, y los hooks 'useState', 'useContext', 'useEffect'.
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useRef } from 'react';
 // Importa las funciones de API necesarias.
 import { getMe, loginUser } from '../services/api';
 
@@ -14,6 +14,8 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
   // Define un estado 'loading' para la verificación inicial de la sesión.
   const [loading, setLoading] = useState(true);
+  // Usamos una referencia para manejar la resolución de la promesa de login/registro.
+  const authPromiseResolveRef = useRef(null);
 
   // Hook 'useEffect' que se ejecuta cuando el valor de 'token' cambia.
   useEffect(() => {
@@ -46,24 +48,32 @@ export const AuthProvider = ({ children }) => {
       }
       // Una vez terminada la verificación, establece 'loading' a 'false' para indicar que la carga inicial ha finalizado.
       setLoading(false);
+      // Si había una promesa de autenticación pendiente, la resolvemos ahora que los datos están listos.
+      if (authPromiseResolveRef.current) {
+        authPromiseResolveRef.current();
+        authPromiseResolveRef.current = null;
+      }
     };
 
     // Llama a la función para que se ejecute.
     fetchUser();
   }, [token]); // Este efecto se ejecuta cada vez que el token cambia.
 
-  // Define la función 'login' que será accesible desde el contexto.
-  const login = async (credentials) => {
-    // 1. Llama a la API para obtener el token.
-    const { token: newToken } = await loginUser(credentials);
-    // 2. Guarda el nuevo token en localStorage para que la función getMe() lo pueda usar.
-    localStorage.setItem('token', newToken);
-    // 3. Llama a la API para obtener los datos del nuevo usuario usando el token recién obtenido.
-    const userData = await getMe();
-    // 4. Actualiza el estado del usuario y del token en React.
-    // Esto asegura que toda la información esté lista ANTES de que la función 'login' termine y se produzca la navegación.
-    setUser(userData);
-    setToken(newToken);
+  // Define la función 'login' que devuelve una promesa para manejar la asincronía.
+  const login = (credentials) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        // Guardamos la función 'resolve' para llamarla cuando el useEffect termine.
+        authPromiseResolveRef.current = resolve;
+        // 1. Llama a la API para obtener el token.
+        const { token: newToken } = await loginUser(credentials);
+        // 2. Actualiza el estado del token, lo que disparará el useEffect.
+        setToken(newToken);
+      } catch (error) {
+        // Si la llamada a loginUser falla, rechazamos la promesa inmediatamente.
+        reject(error);
+      }
+    });
   };
 
   // Define la función 'logout' que será accesible desde el contexto.
@@ -75,7 +85,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Crea el objeto 'value' que contendrá todos los datos y funciones que el proveedor hará disponibles.
-  const value = { user, isAuthenticated: !!user, loading, login, logout, token };
+  const value = { user, isAuthenticated: !!user, loading, login, logout };
 
   // Renderiza el proveedor del contexto, pasando el objeto 'value' y renderizando los componentes hijos.
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
