@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     // 1. Llama a la API para obtener el token. Esto puede lanzar un error si las credenciales son incorrectas.
     const { token: newToken } = await loginUser(credentials);
-    // 2. Guarda el nuevo token en localStorage para persistir la sesión.
+    // 2. Guarda el nuevo token en localStorage INMEDIATAMENTE para que la siguiente llamada a la API lo use.
     localStorage.setItem('token', newToken);
     // 3. Llama a la API para obtener los datos del nuevo usuario usando el token recién obtenido.
     const userData = await getMe();
