@@ -1,5 +1,5 @@
 // filepath: d:/Programacion/Ejemplo Pagina Web Inventarios/Inventario Web/src/services/api.js
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('token');
@@ -11,7 +11,7 @@ const getAuthHeaders = () => {
 
 // Función genérica para peticiones
 const apiFetch = async (endpoint, options = {}) => {
-  const response = await fetch(`${API_URL}${endpoint}`, {
+  const response = await fetch(`${API_URL}/api${endpoint}`, {
     ...options,
     headers: getAuthHeaders(),
   });

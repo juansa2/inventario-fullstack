@@ -15,7 +15,28 @@ const app = express(); // ¡Esta es la línea clave que faltaba al principio!
 connectDB();
 
 // --- Middlewares Globales ---
-app.use(cors());
+
+// --- Configuración de CORS ---
+// Creamos una "lista blanca" de los orígenes que permitiremos.
+const whitelist = [
+  'https://inventario-fullstack.vercel.app', // Tu frontend en Vercel
+  'http://localhost:5173'                     // Tu frontend en desarrollo local (puerto por defecto de Vite)
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Permitimos peticiones sin 'origin' (como las de Postman o apps móviles)
+    if (!origin) return callback(null, true);
+    
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true); // El origen está en la lista blanca, lo permitimos.
+    } else {
+      callback(new Error('Not allowed by CORS')); // El origen no está permitido.
+    }
+  }
+};
+
+app.use(cors(corsOptions));
 app.use(express.json()); // Para poder recibir JSON en el body de las peticiones
 
 // --- Servir archivos estáticos (imágenes, documentos, etc.) ---
