@@ -45,7 +45,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // --- Rutas de Autenticación (Públicas) ---
 // POST: Registrar un nuevo usuario
-app.post('/auth/register', async (req, res) => {
+app.post('/api/auth/register', async (req, res) => {
   const { name, email, password } = req.body;
   try {
     let user = await User.findOne({ email });
@@ -66,7 +66,7 @@ app.post('/auth/register', async (req, res) => {
 });
 
 // POST: Iniciar sesión
-app.post('/auth/login', async (req, res) => {
+app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
@@ -91,12 +91,12 @@ app.post('/auth/login', async (req, res) => {
 
 // --- Middleware de Seguridad para Rutas de Inventario ---
 // A partir de aquí, todas las rutas a /products requerirán un token válido.
-app.use('/products', authMiddleware);
+app.use('/api/products', authMiddleware);
 
 // --- Rutas Protegidas (Inventario) ---
 
 // POST: Añadir un nuevo equipo (asigna el dueño automáticamente)
-app.post('/products', async (req, res) => {
+app.post('/api/products', async (req, res) => {
   try {
     const newComputer = new Computer({
       ...req.body,
@@ -126,7 +126,7 @@ app.post('/products', async (req, res) => {
 });
 
 // GET: Obtener solo los equipos del usuario logueado
-app.get('/products', async (req, res) => {
+app.get('/api/products', async (req, res) => {
   try {
     const computers = await Computer.find({ user: req.user.userId });
     res.json(computers);
@@ -136,7 +136,7 @@ app.get('/products', async (req, res) => {
 });
 
 // DELETE: Eliminar un equipo (solo si le pertenece al usuario)
-app.delete('/products/:id', async (req, res) => {
+app.delete('/api/products/:id', async (req, res) => {
   try {
     const deletedComputer = await Computer.findOneAndDelete({ _id: req.params.id, user: req.user.userId });
     if (!deletedComputer) return res.status(404).json({ message: 'Equipo no encontrado o no autorizado' });
@@ -147,7 +147,7 @@ app.delete('/products/:id', async (req, res) => {
 });
 
 // PUT: Actualizar un equipo (solo si le pertenece al usuario)
-app.put('/products/:id', async (req, res) => {
+app.put('/api/products/:id', async (req, res) => {
   try {
     const updatedData = req.body;
     const updatedComputer = await Computer.findOneAndUpdate({ _id: req.params.id, user: req.user.userId }, updatedData, { new: true });
