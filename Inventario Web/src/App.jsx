@@ -51,8 +51,10 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             {/* Define las rutas protegidas, envolviendo el componente de la página con 'ProtectedRoute'. */}
             <Route path="/inventory" element={<ProtectedRoute><InventoryPage /></ProtectedRoute>} />
-            {/* Nueva ruta específica para el inventario de computadores */}
+            {/* Nueva ruta específica para el inventario de computadores. */}
             <Route path="/inventory/computers" element={<ProtectedRoute><ComputersPage /></ProtectedRoute>} />
+            {/* Aquí añadiremos las rutas para los otros inventarios en el futuro. */}
+            {/* <Route path="/inventory/meals" element={<ProtectedRoute><MealsPage /></ProtectedRoute>} /> */}
             <Route path="/change-password" element={<ProtectedRoute><ChangePasswordPage /></ProtectedRoute>} />
           </Routes>
         </main>
