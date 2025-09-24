@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 // Importa la función 'registerUser' desde nuestro archivo de servicios de API.
 import { registerUser } from '../services/api';
+// Importa el hook 'useAuth' para acceder a la función de login del contexto.
+import { useAuth } from '../context/AuthContext';
 
 // Define el componente de la página de registro.
 const RegisterPage = () => {
@@ -13,6 +15,8 @@ const RegisterPage = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  // Obtiene la función 'login' del contexto para iniciar sesión automáticamente después del registro.
+  const { login } = useAuth();
   // Obtiene la función 'navigate' para redirigir al usuario después del registro.
   const navigate = useNavigate();
 
@@ -28,8 +32,8 @@ const RegisterPage = () => {
       // Llama a la función 'registerUser' de la API con los datos del formulario.
       const data = await registerUser({ name, email, password });
 
-      // Si el registro es exitoso, guarda el token JWT en el almacenamiento local.
-      localStorage.setItem('token', data.token);
+      // Llama a la función 'login' del contexto con el nuevo token para iniciar la sesión.
+      login(data.token);
       // Redirige al usuario a la página de inventario.
       navigate('/inventory');
     } catch (err) {

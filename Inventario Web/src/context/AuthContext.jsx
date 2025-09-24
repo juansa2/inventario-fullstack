@@ -10,13 +10,20 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   // Define un estado 'user' para almacenar los datos del usuario logueado.
   const [user, setUser] = useState(null);
-  // Define un estado 'loading' para saber si se están cargando los datos del usuario.
+  // Define un estado para el token, inicializándolo desde localStorage.
+  const [token, setToken] = useState(localStorage.getItem('token'));
+  // Define un estado 'loading' para saber si se está verificando la sesión inicial.
   const [loading, setLoading] = useState(true);
-  // Obtiene el token del almacenamiento local.
-  const token = localStorage.getItem('token');
 
   // Hook 'useEffect' que se ejecuta cuando el valor de 'token' cambia.
   useEffect(() => {
+    // Actualiza localStorage cada vez que el estado del token cambie.
+    if (token) {
+      localStorage.setItem('token', token);
+    } else {
+      localStorage.removeItem('token');
+    }
+
     // Define una función asíncrona para buscar los datos del usuario.
     const fetchUser = async () => {
       // Si existe un token...
@@ -29,34 +36,32 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
           // Si falla (ej. token expirado o inválido), muestra un error en consola.
           console.error("Error al obtener el usuario, el token puede ser inválido.", error);
-          // Limpia el token inválido del almacenamiento local.
-          localStorage.removeItem('token');
-          // Asegura que el estado del usuario sea nulo.
+          // Limpia el token y el usuario del estado.
+          setToken(null);
           setUser(null);
         }
+      } else {
+        // Si no hay token, asegura que el usuario sea nulo.
+        setUser(null);
       }
-      // Una vez terminado el proceso (con o sin token), establece 'loading' a 'false'.
+      // Una vez terminada la verificación inicial, establece 'loading' a 'false'.
       setLoading(false);
     };
 
     // Llama a la función para que se ejecute.
     fetchUser();
-  }, [token]);
+  }, [token]); // Este efecto se ejecuta cada vez que el token cambia.
 
   // Define la función 'login' que será accesible desde el contexto.
-  const login = async (credentials) => {
-    // Llama a la API para iniciar sesión.
-    const userData = await getMe(); // Re-utilizamos getMe para obtener los datos del usuario tras el login.
-    // Actualiza el estado del usuario con los datos recibidos.
-    setUser(userData);
+  const login = (newToken) => {
+    // Actualiza el estado del token, lo que disparará el useEffect para obtener los datos del usuario.
+    setToken(newToken);
   };
 
   // Define la función 'logout' que será accesible desde el contexto.
   const logout = () => {
-    // Elimina el token del almacenamiento local.
-    localStorage.removeItem('token');
-    // Resetea el estado del usuario a nulo.
-    setUser(null);
+    // Establece el token a null, lo que disparará el useEffect para limpiar el estado.
+    setToken(null);
   };
 
   // Crea el objeto 'value' que contendrá todos los datos y funciones que el proveedor hará disponibles.

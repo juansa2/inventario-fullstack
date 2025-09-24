@@ -30,10 +30,8 @@ const LoginPage = () => {
     try {
       // Llama a la función 'loginUser' de la API con las credenciales del formulario.
       const data = await loginUser({ email, password });
-      // Si el login es exitoso, guarda el token JWT en el almacenamiento local del navegador.
-      localStorage.setItem('token', data.token);
-      // Llama a la función 'login' del contexto para actualizar el estado del usuario en toda la app.
-      await login();
+      // Llama a la función 'login' del contexto, pasándole el nuevo token.
+      login(data.token);
       // Redirige al usuario a la página principal del inventario.
       navigate('/inventory');
     } catch (err) {
