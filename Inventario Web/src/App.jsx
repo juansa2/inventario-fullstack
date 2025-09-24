@@ -10,6 +10,8 @@ import InventoryPage from './pages/InventoryPage';
 import ChangePasswordPage from './pages/ChangePasswordPage';
 // Importa la nueva página de inventario de computadores
 import ComputersPage from './pages/ComputersPage';
+// Importa la nueva página de inventario de comidas
+import MealsPage from './pages/MealsPage';
 // Importa el hook 'useAuth' para acceder al estado de autenticación.
 import { useAuth } from './context/AuthContext';
 // Importa los estilos CSS principales de la aplicación.
@@ -53,8 +55,8 @@ function App() {
             <Route path="/inventory" element={<ProtectedRoute><InventoryPage /></ProtectedRoute>} />
             {/* Nueva ruta específica para el inventario de computadores. */}
             <Route path="/inventory/computers" element={<ProtectedRoute><ComputersPage /></ProtectedRoute>} />
-            {/* Aquí añadiremos las rutas para los otros inventarios en el futuro. */}
-            {/* <Route path="/inventory/meals" element={<ProtectedRoute><MealsPage /></ProtectedRoute>} /> */}
+            {/* Nueva ruta específica para el inventario de comidas. */}
+            <Route path="/inventory/meals" element={<ProtectedRoute><MealsPage /></ProtectedRoute>} />
             <Route path="/change-password" element={<ProtectedRoute><ChangePasswordPage /></ProtectedRoute>} />
           </Routes>
         </main>

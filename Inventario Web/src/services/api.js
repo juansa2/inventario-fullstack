@@ -72,6 +72,9 @@ export const getComputers = () => apiFetch('/products');
 
 // Comidas
 export const getMeals = () => apiFetch('/meals');
+export const addMeal = (mealData) => apiFetch('/meals', { method: 'POST', body: JSON.stringify(mealData) });
+export const updateMeal = (id, mealData) => apiFetch(`/meals/${id}`, { method: 'PUT', body: JSON.stringify(mealData) });
+export const deleteMeal = (id) => apiFetch(`/meals/${id}`, { method: 'DELETE' });
 
 // Ingredientes
 export const getIngredients = () => apiFetch('/ingredients');
