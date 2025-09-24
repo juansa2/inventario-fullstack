@@ -32,8 +32,8 @@ const RegisterPage = () => {
       // Llama a la función 'registerUser' de la API con los datos del formulario.
       await registerUser({ name, email, password });
 
-      // Después de un registro exitoso, llama a la función 'login' del contexto
-      // para iniciar sesión con las mismas credenciales.
+      // Después de un registro exitoso, llama a la función 'login' del contexto para
+      // iniciar sesión automáticamente con las mismas credenciales.
       await login({ email, password });
 
       // Redirige al usuario a la página de inventario.
