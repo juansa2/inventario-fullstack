@@ -1,7 +1,7 @@
 // Importa las funcionalidades de React: el núcleo, la creación de contexto, y los hooks 'useState', 'useContext', 'useEffect'.
 import React, { createContext, useState, useContext, useEffect } from 'react';
-// Importa la función 'getMe' desde 'api.js' para obtener los datos del usuario autenticado.
-import { getMe } from '../services/api';
+// Importa las funciones de API necesarias.
+import { getMe, loginUser } from '../services/api';
 
 // Crea un nuevo Contexto de React. 'null' es el valor inicial por defecto.
 const AuthContext = createContext(null);
@@ -54,10 +54,16 @@ export const AuthProvider = ({ children }) => {
 
   // Define la función 'login' que será accesible desde el contexto.
   const login = async (credentials) => {
-    // Llama a la API para obtener el token.
-    const data = await loginUser(credentials);
-    // Actualiza el estado del token, lo que disparará el useEffect para obtener los datos del usuario.
-    setToken(data.token);
+    // 1. Llama a la API para obtener el token.
+    const { token: newToken } = await loginUser(credentials);
+    // 2. Guarda el nuevo token en localStorage.
+    localStorage.setItem('token', newToken);
+    // 3. Llama a la API para obtener los datos del nuevo usuario.
+    const userData = await getMe();
+    // 4. Actualiza el estado del usuario y del token en React.
+    // Esto asegura que toda la información esté lista ANTES de que la función termine.
+    setUser(userData);
+    setToken(newToken);
   };
 
   // Define la función 'logout' que será accesible desde el contexto.

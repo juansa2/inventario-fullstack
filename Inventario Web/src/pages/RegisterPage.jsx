@@ -30,10 +30,12 @@ const RegisterPage = () => {
 
     try {
       // Llama a la función 'registerUser' de la API con los datos del formulario.
-      const data = await registerUser({ name, email, password });
+      await registerUser({ name, email, password });
 
-      // Llama a la función 'login' del contexto con el nuevo token y espera a que termine.
-      await login(data.token);
+      // Después de un registro exitoso, llama a la función 'login' del contexto
+      // para iniciar sesión con las mismas credenciales.
+      await login({ email, password });
+
       // Redirige al usuario a la página de inventario.
       navigate('/inventory');
     } catch (err) {
