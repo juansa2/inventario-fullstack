@@ -320,6 +320,26 @@ app.post('/api/licenses', async (req, res) => {
   }
 });
 
+app.put('/api/licenses/:id', async (req, res) => {
+  try {
+    const updatedLicense = await License.findOneAndUpdate({ _id: req.params.id, user: req.user.userId }, req.body, { new: true });
+    if (!updatedLicense) return res.status(404).json({ message: 'Licencia no encontrada' });
+    res.json(updatedLicense);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al actualizar la licencia' });
+  }
+});
+
+app.delete('/api/licenses/:id', async (req, res) => {
+  try {
+    const deletedLicense = await License.findOneAndDelete({ _id: req.params.id, user: req.user.userId });
+    if (!deletedLicense) return res.status(404).json({ message: 'Licencia no encontrada' });
+    res.json({ message: 'Licencia eliminada' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al eliminar la licencia' });
+  }
+});
+
 // --- RUTA PARA CAMBIO DE CONTRASEÑA ---
 // Define la ruta para cambiar la contraseña del usuario (método PUT), protegida por autenticación.
 app.put('/api/auth/change-password', authMiddleware, async (req, res) => {
