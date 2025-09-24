@@ -8,6 +8,8 @@ import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import InventoryPage from './pages/InventoryPage';
 import ChangePasswordPage from './pages/ChangePasswordPage';
+// Importa la nueva página de inventario de computadores
+import ComputersPage from './pages/ComputersPage';
 // Importa el hook 'useAuth' para acceder al estado de autenticación.
 import { useAuth } from './context/AuthContext';
 // Importa los estilos CSS principales de la aplicación.
@@ -49,6 +51,8 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             {/* Define las rutas protegidas, envolviendo el componente de la página con 'ProtectedRoute'. */}
             <Route path="/inventory" element={<ProtectedRoute><InventoryPage /></ProtectedRoute>} />
+            {/* Nueva ruta específica para el inventario de computadores */}
+            <Route path="/inventory/computers" element={<ProtectedRoute><ComputersPage /></ProtectedRoute>} />
             <Route path="/change-password" element={<ProtectedRoute><ChangePasswordPage /></ProtectedRoute>} />
           </Routes>
         </main>

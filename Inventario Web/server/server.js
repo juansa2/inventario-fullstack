@@ -19,6 +19,12 @@ const User = require('./models/user');
 const Computer = require('./models/computer');
 // Importa el middleware de autenticación personalizado desde './middleware/authMiddleware.js'.
 const authMiddleware = require('./middleware/authMiddleware');
+// --- NUEVOS MODELOS ---
+// Importa los nuevos modelos de inventario.
+const Meal = require('./models/Meal');
+const Ingredient = require('./models/Ingredient');
+const License = require('./models/License');
+
 
 // --- Inicialización y Configuración ---
 // Crea una instancia de la aplicación Express.
@@ -129,6 +135,11 @@ app.post('/api/auth/login', async (req, res) => {
 // --- Middleware de Seguridad para Rutas de Inventario ---
 // Aplica el 'authMiddleware' a todas las rutas que comiencen con '/api/products'.
 app.use('/api/products', authMiddleware);
+// Aplica el middleware a las nuevas rutas de inventario.
+app.use('/api/meals', authMiddleware);
+app.use('/api/ingredients', authMiddleware);
+app.use('/api/licenses', authMiddleware);
+
 
 // --- Rutas Protegidas (Inventario) ---
 
@@ -204,6 +215,108 @@ app.put('/api/products/:id', async (req, res) => {
     res.json({ message: 'Equipo actualizado exitosamente', product: updatedComputer });
   } catch (error) {
     res.status(500).json({ message: 'Error al actualizar el equipo' });
+  }
+});
+
+// --- NUEVAS RUTAS DE INVENTARIO ---
+
+// --- Rutas para Comidas (Meals) ---
+app.get('/api/meals', async (req, res) => {
+  try {
+    const meals = await Meal.find({ user: req.user.userId });
+    res.json(meals);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener las comidas' });
+  }
+});
+
+app.post('/api/meals', async (req, res) => {
+  try {
+    const newMeal = new Meal({ ...req.body, user: req.user.userId });
+    await newMeal.save();
+    res.status(201).json(newMeal);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al añadir la comida' });
+  }
+});
+
+app.put('/api/meals/:id', async (req, res) => {
+  try {
+    const updatedMeal = await Meal.findOneAndUpdate({ _id: req.params.id, user: req.user.userId }, req.body, { new: true });
+    if (!updatedMeal) return res.status(404).json({ message: 'Comida no encontrada' });
+    res.json(updatedMeal);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al actualizar la comida' });
+  }
+});
+
+app.delete('/api/meals/:id', async (req, res) => {
+  try {
+    const deletedMeal = await Meal.findOneAndDelete({ _id: req.params.id, user: req.user.userId });
+    if (!deletedMeal) return res.status(404).json({ message: 'Comida no encontrada' });
+    res.json({ message: 'Comida eliminada' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al eliminar la comida' });
+  }
+});
+
+// --- Rutas para Ingredientes (Ingredients) ---
+app.get('/api/ingredients', async (req, res) => {
+  try {
+    const ingredients = await Ingredient.find({ user: req.user.userId });
+    res.json(ingredients);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener los ingredientes' });
+  }
+});
+
+app.post('/api/ingredients', async (req, res) => {
+  try {
+    const newIngredient = new Ingredient({ ...req.body, user: req.user.userId });
+    await newIngredient.save();
+    res.status(201).json(newIngredient);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al añadir el ingrediente' });
+  }
+});
+
+app.put('/api/ingredients/:id', async (req, res) => {
+  try {
+    const updatedIngredient = await Ingredient.findOneAndUpdate({ _id: req.params.id, user: req.user.userId }, req.body, { new: true });
+    if (!updatedIngredient) return res.status(404).json({ message: 'Ingrediente no encontrado' });
+    res.json(updatedIngredient);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al actualizar el ingrediente' });
+  }
+});
+
+app.delete('/api/ingredients/:id', async (req, res) => {
+  try {
+    const deletedIngredient = await Ingredient.findOneAndDelete({ _id: req.params.id, user: req.user.userId });
+    if (!deletedIngredient) return res.status(404).json({ message: 'Ingrediente no encontrado' });
+    res.json({ message: 'Ingrediente eliminado' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al eliminar el ingrediente' });
+  }
+});
+
+// --- Rutas para Licencias (Licenses) ---
+app.get('/api/licenses', async (req, res) => {
+  try {
+    const licenses = await License.find({ user: req.user.userId });
+    res.json(licenses);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener las licencias' });
+  }
+});
+
+app.post('/api/licenses', async (req, res) => {
+  try {
+    const newLicense = new License({ ...req.body, user: req.user.userId });
+    await newLicense.save();
+    res.status(201).json(newLicense);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al añadir la licencia' });
   }
 });
 
