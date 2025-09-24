@@ -12,8 +12,10 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   // Define un estado para el token, inicializándolo desde localStorage.
   const [token, setToken] = useState(localStorage.getItem('token'));
-  // Define un estado 'loading' para saber si se está verificando la sesión inicial.
+  // Define un estado 'loading' para la verificación inicial de la sesión.
   const [loading, setLoading] = useState(true);
+  // Define un estado 'isAuthLoading' para operaciones como login/logout.
+  const [isAuthLoading, setIsAuthLoading] = useState(false);
 
   // Hook 'useEffect' que se ejecuta cuando el valor de 'token' cambia.
   useEffect(() => {
@@ -54,18 +56,23 @@ export const AuthProvider = ({ children }) => {
 
   // Define la función 'login' que será accesible desde el contexto.
   const login = (newToken) => {
+    // Activa el estado de carga de autenticación.
+    setIsAuthLoading(true);
     // Actualiza el estado del token, lo que disparará el useEffect para obtener los datos del usuario.
     setToken(newToken);
   };
 
   // Define la función 'logout' que será accesible desde el contexto.
   const logout = () => {
+    // Activa el estado de carga de autenticación.
+    setIsAuthLoading(true);
     // Establece el token a null, lo que disparará el useEffect para limpiar el estado.
     setToken(null);
   };
 
   // Crea el objeto 'value' que contendrá todos los datos y funciones que el proveedor hará disponibles.
-  const value = { user, isAuthenticated: !!user, loading, login, logout };
+  // El estado de carga general es la combinación de la carga inicial Y la carga de autenticación.
+  const value = { user, isAuthenticated: !!user, loading: loading || isAuthLoading, login, logout };
 
   // Renderiza el proveedor del contexto, pasando el objeto 'value' y renderizando los componentes hijos.
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
