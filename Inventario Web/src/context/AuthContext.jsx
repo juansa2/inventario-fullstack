@@ -68,6 +68,8 @@ export const AuthProvider = ({ children }) => {
 
   // Define la función 'logout' que será accesible desde el contexto.
   const logout = () => {
+    // Elimina el token del almacenamiento local para asegurar una limpieza completa de la sesión.
+    localStorage.removeItem('token');
     // Establece el token a null, lo que disparará el useEffect para limpiar el estado.
     setToken(null);
   };
