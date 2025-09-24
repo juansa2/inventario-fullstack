@@ -54,14 +54,14 @@ export const AuthProvider = ({ children }) => {
 
   // Define la función 'login' que será accesible desde el contexto.
   const login = async (credentials) => {
-    // 1. Llama a la API para obtener el token. Esto puede lanzar un error si las credenciales son incorrectas.
+    // 1. Llama a la API para obtener el token.
     const { token: newToken } = await loginUser(credentials);
-    // 2. Guarda el nuevo token en localStorage INMEDIATAMENTE para que la siguiente llamada a la API lo use.
+    // 2. Guarda el nuevo token en localStorage para que la función getMe() lo pueda usar.
     localStorage.setItem('token', newToken);
     // 3. Llama a la API para obtener los datos del nuevo usuario usando el token recién obtenido.
     const userData = await getMe();
     // 4. Actualiza el estado del usuario y del token en React.
-    // Esto asegura que toda la información esté lista ANTES de que la función termine.
+    // Esto asegura que toda la información esté lista ANTES de que la función 'login' termine y se produzca la navegación.
     setUser(userData);
     setToken(newToken);
   };
