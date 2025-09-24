@@ -43,6 +43,14 @@ export const AuthProvider = ({ children }) => {
     fetchUser();
   }, [token]);
 
+  // Define la función 'login' que será accesible desde el contexto.
+  const login = async (credentials) => {
+    // Llama a la API para iniciar sesión.
+    const userData = await getMe(); // Re-utilizamos getMe para obtener los datos del usuario tras el login.
+    // Actualiza el estado del usuario con los datos recibidos.
+    setUser(userData);
+  };
+
   // Define la función 'logout' que será accesible desde el contexto.
   const logout = () => {
     // Elimina el token del almacenamiento local.
@@ -52,7 +60,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Crea el objeto 'value' que contendrá todos los datos y funciones que el proveedor hará disponibles.
-  const value = { user, isAuthenticated: !!user, loading, logout };
+  const value = { user, isAuthenticated: !!user, loading, login, logout };
 
   // Renderiza el proveedor del contexto, pasando el objeto 'value' y renderizando los componentes hijos.
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

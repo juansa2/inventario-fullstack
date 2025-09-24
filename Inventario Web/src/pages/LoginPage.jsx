@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 // Importa la función 'loginUser' desde nuestro archivo de servicios de API.
 import { loginUser } from '../services/api';
+// Importa el hook 'useAuth' para acceder a la función de login del contexto.
+import { useAuth } from '../context/AuthContext';
 
 // Define el componente de la página de inicio de sesión.
 const LoginPage = () => {
@@ -12,6 +14,8 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  // Obtiene la función 'login' del contexto de autenticación.
+  const { login } = useAuth();
   // Obtiene la función 'navigate' para redirigir al usuario después del login.
   const navigate = useNavigate();
 
@@ -28,6 +32,8 @@ const LoginPage = () => {
       const data = await loginUser({ email, password });
       // Si el login es exitoso, guarda el token JWT en el almacenamiento local del navegador.
       localStorage.setItem('token', data.token);
+      // Llama a la función 'login' del contexto para actualizar el estado del usuario en toda la app.
+      await login();
       // Redirige al usuario a la página principal del inventario.
       navigate('/inventory');
     } catch (err) {

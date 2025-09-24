@@ -82,7 +82,7 @@ function InventoryPage() {
   return (
     <>
       <div className="user-actions">
-        {user && <span className="user-greeting">Hola, {user.email}</span>}
+        {user && <span className="user-greeting">Hola, {user.name}</span>}
         <Link to="/change-password" className="action-link">Cambiar Contraseña</Link>
         <button onClick={handleLogout} className="logout-button">Cerrar Sesión</button>
       </div>
