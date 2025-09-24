@@ -6,7 +6,8 @@
 .inventory-menu {
   display: grid;
   /* Crea una cuadrícula flexible que se adapta al tamaño de la pantalla. */
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  /* Forzamos una cuadrícula de 2 columnas, donde cada una ocupa una fracción igual del espacio. */
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
   margin-top: 20px;
 }
