@@ -208,15 +208,6 @@ button[type="submit"]:hover {
   background-color: #5a6268;
 }
 /* --- Estilos para la cabecera del inventario --- */
-.inventory-header {
-  display: flex;
-  justify-content: flex-end; /* Alinea las acciones a la derecha */
-  align-items: center;
-  width: 100%;
-  margin-bottom: 2rem;
-  padding: 0 1rem; /* Añade un poco de espacio a los lados */
-  box-sizing: border-box;
-}
 
 .user-actions {
   display: flex;

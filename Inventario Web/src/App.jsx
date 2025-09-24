@@ -22,13 +22,8 @@ const ProtectedRoute = ({ children }) => {
 
 function App() {
   return (
-      <div className="app">
-        <header className="App-header">
-            <h1>Sistema de Inventario</h1>
-            <nav>
-              {/* ... */}
-            </nav>
-        </header>
+      <div className="app-container">
+        <h1>Sistema de Inventario</h1>
         <main>
           <Routes>
             <Route path="/" element={<HomePage />} />

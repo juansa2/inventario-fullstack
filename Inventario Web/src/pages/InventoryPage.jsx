@@ -75,11 +75,9 @@ function InventoryPage() {
   // 3. El JSX se mantiene, pero envolvemos los botones para un mejor estilo
   return (
     <>
-      <div className="inventory-header">
-        <div className="user-actions">
-          <Link to="/change-password" className="action-link">Cambiar Contraseña</Link>
-          <button onClick={handleLogout} className="logout-button">Cerrar Sesión</button>
-        </div>
+      <div className="user-actions">
+        <Link to="/change-password" className="action-link">Cambiar Contraseña</Link>
+        <button onClick={handleLogout} className="logout-button">Cerrar Sesión</button>
       </div>
       <AddProductForm
         onAddProduct={handleAddProduct}

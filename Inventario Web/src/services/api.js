@@ -23,30 +23,24 @@ const apiFetch = async (endpoint, options = {}) => {
   return response.json();
 };
 
-// Exportar funciones específicas
+// --- Funciones para Autenticación ---
 export const loginUser = (credentials) => apiFetch('/auth/login', {
   method: 'POST',
   body: JSON.stringify(credentials)
 });
 
-export const getInventory = () => apiFetch('/products');
-
-export const addProduct = (productData) => apiFetch('/products', {
-  method: 'POST',
-  body: JSON.stringify(productData)
-});
-
-// filepath: d:/Programacion/Ejemplo Pagina Web Inventarios/Inventario Web/src/services/api.js
-// ...existing code...
-// --- Funciones para Autenticación ---
-export const loginUser = (credentials) => apiFetch('/api/auth/login', {
-  method: 'POST',
-  body: JSON.stringify(credentials)
-});
-
-// --- AÑADIR ESTA FUNCIÓN ---
-export const registerUser = (userData) => apiFetch('/api/auth/register', {
+export const registerUser = (userData) => apiFetch('/auth/register', {
   method: 'POST',
   body: JSON.stringify(userData)
 });
-// ... y así para todas las demás peticiones (delete, update, etc.)
+
+export const changePassword = (passwords) => apiFetch('/auth/change-password', {
+  method: 'PUT',
+  body: JSON.stringify(passwords)
+});
+
+// --- Funciones para Inventario (Productos) ---
+export const getInventory = () => apiFetch('/products');
+export const addProduct = (productData) => apiFetch('/products', { method: 'POST', body: JSON.stringify(productData) });
+export const updateProduct = (id, productData) => apiFetch(`/products/${id}`, { method: 'PUT', body: JSON.stringify(productData) });
+export const deleteProduct = (id) => apiFetch(`/products/${id}`, { method: 'DELETE' });
