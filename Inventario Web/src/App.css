@@ -226,3 +226,9 @@ button[type="submit"]:hover {
 .action-link:hover {
   color: #007bff;
 }
+
+/* Estilo para el saludo al usuario */
+.user-greeting {
+  font-weight: 500;
+  margin-right: auto; /* Empuja los otros elementos a la derecha */
+}

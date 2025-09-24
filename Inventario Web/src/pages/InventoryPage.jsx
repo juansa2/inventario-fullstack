@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx'; // Importamos el hook de autenticación
 import AddProductForm from '../components/AddProductForm.jsx';
 import ProductList from '../components/ProductList.jsx';
 // 1. Importamos las funciones centralizadas desde nuestro servicio de API
 import { getInventory, addProduct, deleteProduct, updateProduct } from '../services/api.js';
 
 function InventoryPage() {
+  const { user, logout, loading } = useAuth(); // Usamos el contexto para obtener el usuario y la función de logout
   const [products, setProducts] = useState([]);
   const [productToEdit, setProductToEdit] = useState(null);
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    logout(); // Usamos la función de logout del contexto
     navigate('/');
   };
 
@@ -26,7 +28,7 @@ function InventoryPage() {
         setProducts(data);
       } catch (error) {
         console.error(error.message);
-        // Si el token es inválido o no existe, el error lo indicará y cerramos sesión
+        // Si el token es inválido o no existe, el error lo indicará y cerramos sesión (manejado ahora por AuthContext)
         if (error.message.includes('inválido') || error.message.includes('denegada')) {
           handleLogout();
         }
@@ -72,10 +74,15 @@ function InventoryPage() {
     window.scrollTo(0, 0); // Sube la vista al formulario de edición
   };
 
+  if (loading) {
+    return <div>Cargando...</div>;
+  }
+
   // 3. El JSX se mantiene, pero envolvemos los botones para un mejor estilo
   return (
     <>
       <div className="user-actions">
+        {user && <span className="user-greeting">Hola, {user.email}</span>}
         <Link to="/change-password" className="action-link">Cambiar Contraseña</Link>
         <button onClick={handleLogout} className="logout-button">Cerrar Sesión</button>
       </div>

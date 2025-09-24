@@ -39,6 +39,8 @@ export const changePassword = (passwords) => apiFetch('/auth/change-password', {
   body: JSON.stringify(passwords)
 });
 
+export const getMe = () => apiFetch('/auth/me');
+
 // --- Funciones para Inventario (Productos) ---
 export const getInventory = () => apiFetch('/products');
 export const addProduct = (productData) => apiFetch('/products', { method: 'POST', body: JSON.stringify(productData) });

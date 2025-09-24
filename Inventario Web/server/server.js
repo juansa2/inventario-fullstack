@@ -193,6 +193,21 @@ app.put('/api/auth/change-password', authMiddleware, async (req, res) => {
   }
 });
 
+// --- RUTA PARA OBTENER DATOS DEL USUARIO LOGUEADO ---
+app.get('/api/auth/me', authMiddleware, async (req, res) => {
+  try {
+    // req.user.userId es añadido por el authMiddleware
+    const user = await User.findById(req.user.userId).select('-password'); // .select('-password') excluye la contraseña
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+    res.json(user);
+  } catch (error) {
+    console.error('Error al obtener datos del usuario:', error);
+    res.status(500).json({ message: 'Error interno del servidor.' });
+  }
+});
+
 // --- Servir Frontend en Producción ---
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../dist')));
